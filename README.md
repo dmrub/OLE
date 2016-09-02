@@ -9,7 +9,7 @@ TBD.
 TBD.
 
 ## Dependencies
-OLE depends on [igraphstore](https://github.com/rmrschub/igraphstore), [fLAPjACk](https://github.com/rmrschub/flapjack), [serendipity}(https://github.com/rmrschub/serendipity), and [OLE-Bootstrapper](https://github.com/rmrschub/OLE-Bootstrapper).
+OLE depends on [igraphstore](https://github.com/rmrschub/igraphstore), [fLAPjACk](https://github.com/rmrschub/flapjack), [serendipity](https://github.com/rmrschub/serendipity), and [OLE-Bootstrapper](https://github.com/rmrschub/OLE-Bootstrapper).
 
 
 ## Contributing
