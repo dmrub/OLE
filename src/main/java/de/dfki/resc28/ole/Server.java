@@ -13,11 +13,10 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import de.dfki.resc28.ole.services.OLEService;
-import de.dfki.resc28.ole.services.RepresentationEnricher;
 import de.dfki.resc28.igraphstore.IGraphStore;
 import de.dfki.resc28.igraphstore.jena.FusekiGraphStore;
-import de.dfki.resc28.igraphstore.jena.TDBGraphStore;
+import de.dfki.resc28.ole.services.OLEService;
+import de.dfki.resc28.ole.services.RepresentationEnricher;
 
 @ApplicationPath("/")
 public class Server extends Application
@@ -39,64 +38,50 @@ public class Server extends Application
 
     public static synchronized void configure() 
     {
-        if (fGraphStore != null) 
-        {
-            return;
-        }
-
         try 
         {
-            String oleConfigFile = System.getProperty("ole.configuration");
+            String configFile = System.getProperty("ole.configuration");
             java.io.InputStream is;
-            if (oleConfigFile != null) 
+
+            if (configFile != null) 
             {
-                is = new java.io.FileInputStream(oleConfigFile);
-                System.out.format("Loading OLE configuration from %s ...%n", oleConfigFile);
+                is = new java.io.FileInputStream(configFile);
+                System.out.format("Loading OLE Repo configuration from %s ...%n", configFile);
             } 
             else 
             {
                 is = Server.class.getClassLoader().getResourceAsStream("ole.properties");
-                System.out.println("Loading OLE configuration from internal resource file ...");
+                System.out.println("Loading OLE Repo configuration from internal resource file ...");
             }
+
             java.util.Properties p = new Properties();
             p.load(is);
 
-            String storage = p.getProperty("graphStore");
-            String baseURI = p.getProperty("baseURI");
-            
-            if (baseURI == null) 
-            {
-                System.out.println("OLE: baseURI property is null, use hostName property");
-                String hostName = p.getProperty("hostName", "localhost");
-                baseURI = "http://" + hostName;
-            }
-            System.out.format("OLE: baseURI = %s%n", baseURI);
-            fBaseURI = baseURI;
+            fBaseURI = getProperty(p, "baseURI", "ole.baseURI");
 
+            String storage = getProperty(p, "graphStore", "ole.graphStore");
             if (storage.equals("fuseki")) 
             {
-                String dataEndpoint = p.getProperty("dataEndpoint");
-                String queryEndpoint = p.getProperty("queryEndpoint");
-                System.out.format("Use Fuseki backend: dataEndpoint=%s queryEndpoint=%s ...%n", dataEndpoint, queryEndpoint);
-                Server.fGraphStore = new FusekiGraphStore(dataEndpoint, queryEndpoint);
-            } 
-            else if (storage.equals("tdb")) 
-            {
-                System.out.format("Use TDB backend: datasetDir=%s ...%n", p.getProperty("datasetDir"));
+                String dataEndpoint = getProperty(p, "dataEndpoint", "ole.dataEndpoint");
+                String queryEndpoint = getProperty(p, "queryEndpoint", "ole.queryEndpoint");
+                System.out.format("Use Fuseki backend:%n  dataEndpoint=%s%n  queryEndpoint=%s ...%n", dataEndpoint, queryEndpoint);
 
-                if (p.containsKey("datasetDir")) 
-                {
-                    Server.fGraphStore = new TDBGraphStore(p.getProperty("datasetDir"));
-                } 
-                else 
-                {
-                    Server.fGraphStore = new TDBGraphStore();
-                }
+                fGraphStore = new FusekiGraphStore(dataEndpoint, queryEndpoint);
             }
         } 
         catch (Exception e) 
         {
             e.printStackTrace();
         }
+    }
+
+    public static String getProperty(java.util.Properties p, String key, String sysKey) 
+    {
+        String value = System.getProperty(sysKey);
+        if (value != null) 
+        {
+            return value;
+        }
+        return p.getProperty(key);
     }
 }
