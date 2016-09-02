@@ -18,11 +18,13 @@ import de.dfki.resc28.igraphstore.jena.FusekiGraphStore;
 import de.dfki.resc28.ole.services.OLEService;
 import de.dfki.resc28.serendipity.client.RepresentationEnricher;
 
+
 @ApplicationPath("/")
 public class Server extends Application
 {
     public static IGraphStore fGraphStore = null;
     public static String fBaseURI = null;
+    public static String fSerendipityURI = null;
 
 	@Override
     public Set<Object> getSingletons() 
@@ -30,7 +32,7 @@ public class Server extends Application
 		configure();
 	
 		OLEService officialPartsRepo = new OLEService(fGraphStore);
-		RepresentationEnricher enricher = new RepresentationEnricher();
+		RepresentationEnricher enricher = new RepresentationEnricher(fSerendipityURI);
 		
 		return new HashSet<Object>(Arrays.asList(officialPartsRepo, enricher));
     }
@@ -58,6 +60,7 @@ public class Server extends Application
             p.load(is);
 
             fBaseURI = getProperty(p, "baseURI", "ole.baseURI");
+            fSerendipityURI = getProperty(p, "serendipityURI", "ole.serendipityURI");
 
             String storage = getProperty(p, "graphStore", "ole.graphStore");
             if (storage.equals("fuseki")) 

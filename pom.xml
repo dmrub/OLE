@@ -18,6 +18,7 @@
     	<dataEndpoint>http://wks-dmitri.sb.dfki.de:30080/http-proxy/10.254.200.209:80/LDRAW/data</dataEndpoint>
     	<queryEndpoint>http://wks-dmitri.sb.dfki.de:30080/http-proxy/10.254.200.209:80/LDRAW/sparql</queryEndpoint>
         <baseURI>http://ole-frontend</baseURI>
+        <serendipityURI>http://serendipity</serendipityURI>
 	</properties>
 
   	<build>
@@ -36,6 +37,22 @@
 			</plugins>
 		</pluginManagement>
     	<plugins>
+		    <plugin>
+		        <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>properties-maven-plugin</artifactId>
+		        <version>1.0.0</version>
+		        <executions>
+		            <execution>
+		                <phase>generate-resources</phase>
+		                <goals>
+		                    <goal>write-project-properties</goal>
+		                </goals>
+		                <configuration>
+		                    <outputFile>${project.build.outputDirectory}/ole.properties</outputFile>
+		                </configuration>
+		            </execution>
+		        </executions>
+		    </plugin>
 	        <plugin>
 	            <groupId>org.apache.tomcat.maven</groupId>
 	            <artifactId>tomcat7-maven-plugin</artifactId>
@@ -168,7 +185,7 @@
 
 		<dependency>
 			<groupId>de.dfki.resc28</groupId>
-			<artifactId>serendipity</artifactId>
+			<artifactId>serendipity-client</artifactId>
 			<version>0.1</version>
 		</dependency>
 		
