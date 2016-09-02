@@ -18,7 +18,7 @@
     	<dataEndpoint>http://wks-dmitri.sb.dfki.de:30080/http-proxy/10.254.200.209:80/LDRAW/data</dataEndpoint>
     	<queryEndpoint>http://wks-dmitri.sb.dfki.de:30080/http-proxy/10.254.200.209:80/LDRAW/sparql</queryEndpoint>
         <baseURI>http://ole-frontend</baseURI>
-        <serendipityURI>http://serendipity</serendipityURI>
+        <serendipityURI>http://serendipity/affordances</serendipityURI>
 	</properties>
 
   	<build>
