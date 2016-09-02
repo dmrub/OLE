@@ -166,6 +166,12 @@
 			<version>19.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>de.dfki.resc28</groupId>
+			<artifactId>serendipity</artifactId>
+			<version>0.1</version>
+		</dependency>
+		
   	</dependencies>
   	
 </project>

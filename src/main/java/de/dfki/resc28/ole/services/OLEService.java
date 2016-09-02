@@ -12,6 +12,7 @@ import de.dfki.resc28.flapjack.resources.IContainer;
 import de.dfki.resc28.flapjack.resources.IResourceManager;
 import de.dfki.resc28.flapjack.services.BaseService;
 import de.dfki.resc28.ole.resources.ResourceManager;
+import de.dfki.resc28.serendipity.client.GenerateAffordances;
 import de.dfki.resc28.igraphstore.IGraphStore;
 
 

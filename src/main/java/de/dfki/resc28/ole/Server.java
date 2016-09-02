@@ -16,7 +16,7 @@ import javax.ws.rs.core.Application;
 import de.dfki.resc28.igraphstore.IGraphStore;
 import de.dfki.resc28.igraphstore.jena.FusekiGraphStore;
 import de.dfki.resc28.ole.services.OLEService;
-import de.dfki.resc28.ole.services.RepresentationEnricher;
+import de.dfki.resc28.serendipity.client.RepresentationEnricher;
 
 @ApplicationPath("/")
 public class Server extends Application
