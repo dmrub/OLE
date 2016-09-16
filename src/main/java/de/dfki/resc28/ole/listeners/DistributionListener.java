@@ -34,6 +34,8 @@ public class DistributionListener extends LDrawParserBaseListener
 	
 	public DistributionListener(String ID, String fileUri) 
 	{
+		super();
+		
 		this.distributionModel = ModelFactory.createDefaultModel();
 		distributionModel.setNsPrefixes(FOAF.NAMESPACE);
 		distributionModel.setNsPrefixes(ADMS.NAMESPACE);

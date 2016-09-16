@@ -45,6 +45,8 @@ public class AssetListener extends LDrawParserBaseListener
 	
 	public AssetListener(String ID, String fileUri) 
 	{
+		super();
+		
 		this.assetModel = ModelFactory.createDefaultModel();
 		this.assetModel.setNsPrefixes(FOAF.NAMESPACE);
 		this.assetModel.setNsPrefixes(ADMS.NAMESPACE);
