@@ -22,8 +22,14 @@ import de.dfki.resc28.serendipity.client.RepresentationEnricher;
 @ApplicationPath("/")
 public class Server extends Application
 {
-    public static IGraphStore fGraphStore = null;
     public static String fBaseURI = null;
+    public static String fAssetBaseUri = null;
+    public static String fDistributionBaseUri = null;
+    public static String fUserBaseUri = null;
+
+
+    public static IGraphStore fGraphStore = null;
+    
     public static String fSerendipityURI = null;
 
 	@Override
@@ -60,6 +66,10 @@ public class Server extends Application
             p.load(is);
 
             fBaseURI = getProperty(p, "baseURI", "ole.baseURI");
+            fAssetBaseUri = Util.joinPath(fBaseURI, "repo/assets/") ;
+            fDistributionBaseUri = Util.joinPath(fBaseURI, "repo/distributions/") ;
+            fUserBaseUri = Util.joinPath(fBaseURI, "repo/users/") ;
+
             fSerendipityURI = getProperty(p, "serendipityURI", "ole.serendipityURI");
 
             String storage = getProperty(p, "graphStore", "ole.graphStore");

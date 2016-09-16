@@ -3,7 +3,9 @@ The Open Lego® rEpository (OLE) is an [ADMS](https://www.w3.org/TR/vocab-adms/)
 OLE provides the [Official Parts](http://ldraw.org/article/13.html) of the [LDraw™](http://www.ldraw.org) as `adms:Asset`s, hence in [RDF](https://www.w3.org/TR/rdf11-primer/).
 
 ## Installation & Running
-TBD.
+```
+mvn clean generate-resources package tomcat7:run
+```
 
 ## Usage
 TBD.

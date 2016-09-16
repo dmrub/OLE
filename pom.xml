@@ -15,10 +15,10 @@
 
   	<properties>
   		<graphStore>fuseki</graphStore>
-    	<dataEndpoint>http://wks-dmitri.sb.dfki.de:30080/http-proxy/10.254.200.209:80/LDRAW/data</dataEndpoint>
-    	<queryEndpoint>http://wks-dmitri.sb.dfki.de:30080/http-proxy/10.254.200.209:80/LDRAW/sparql</queryEndpoint>
-        <baseURI>http://ole-frontend</baseURI>
-        <serendipityURI>http://serendipity/affordances</serendipityURI>
+    	<dataEndpoint>http://localhost:3030/ole/data</dataEndpoint>
+    	<queryEndpoint>http://localhost:3030/ole/sparql</queryEndpoint>
+        <baseURI>http://localhost:8080</baseURI>
+        <serendipityURI>http://localhost:8083/affordances</serendipityURI>
 	</properties>
 
   	<build>
@@ -60,7 +60,7 @@
 	            <configuration>
                     <server>OLE DevServer</server>
                     <path>/</path>
-                    <port>8089</port>
+                    <port>8080</port>
                 </configuration>
 	        </plugin>
 	    </plugins>
@@ -188,7 +188,12 @@
 			<artifactId>serendipity-client</artifactId>
 			<version>0.1</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>de.dfki.resc28</groupId>
+			<artifactId>LDrawParser</artifactId>
+			<version>0.1</version>
+		</dependency>
   	</dependencies>
   	
 </project>
