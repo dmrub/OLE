@@ -8,8 +8,6 @@ package de.dfki.resc28.ole.resources;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +20,6 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.StreamingOutput;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -35,7 +32,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.riot.RDFDataMgr;
 
 import de.dfki.resc28.LDrawParser.LDrawLexer;
 import de.dfki.resc28.LDrawParser.LDrawParser;
@@ -51,6 +47,7 @@ import de.dfki.resc28.ole.listeners.AssetListener;
 import de.dfki.resc28.ole.listeners.DistributionListener;
 
 
+@SuppressWarnings("deprecation")
 public class Repository extends Container implements IResource
 {
 
@@ -79,6 +76,7 @@ public class Repository extends Container implements IResource
 	{
 		try
 		{
+			@SuppressWarnings("resource")
 			HttpClient http = new DefaultHttpClient();
 			HttpGet request = new HttpGet(fileUri);
 
@@ -111,13 +109,6 @@ public class Repository extends Container implements IResource
 		        repoModel.add(repo, DCAT.dataset, asset);
 		        fGraphStore.addToNamedGraph(Util.joinPath(Server.fBaseURI, "repo"), repoModel);
 				
-				StreamingOutput out = new StreamingOutput() 
-				{
-					public void write(OutputStream output) throws IOException, WebApplicationException
-					{
-						RDFDataMgr.write(output, repoModel, RDFDataMgr.determineLang(null, acceptType, null)) ;
-					}
-				};
 				return Response.ok().status(Status.CREATED).contentLocation(new URI(asset.getURI())).build();
 
 			}

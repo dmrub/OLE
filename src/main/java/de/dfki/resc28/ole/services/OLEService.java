@@ -7,7 +7,6 @@ package de.dfki.resc28.ole.services;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.HeaderParam;
