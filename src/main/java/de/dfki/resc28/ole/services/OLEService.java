@@ -81,7 +81,7 @@ public class OLEService extends BaseService
 	
 	@Override
 	@GenerateAffordances
-	public Response get(String acceptType) 
+	public Response get(@HeaderParam(HttpHeaders.ACCEPT) @DefaultValue(Constants.CT_TEXT_TURTLE) final String acceptType) 
 	{
 		return super.get(acceptType);
 	}
