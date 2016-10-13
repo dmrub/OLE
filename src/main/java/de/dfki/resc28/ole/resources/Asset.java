@@ -61,11 +61,22 @@ public class Asset extends Container implements IContainer
 		Resource asset = patchModel.getResource(fURI);
 		
 		// patch ADMS:last triples
+		
+		// first remove any old triples
+		System.out.println(fURI);
+		System.out.println(asset.toString());
+		NodeIterator deleteIterator = fGraphStore.getNamedGraph(fURI).listObjectsOfProperty(asset, ADMS.last);
+		if (deleteIterator.hasNext())
+		{
+			Resource lastVersionToRemove = deleteIterator.next().asResource();
+			fGraphStore.getNamedGraph(fURI).remove(asset, ADMS.last, lastVersionToRemove);
+		}
+			
+		// next, add the new triple
 		NodeIterator iter = patchModel.listObjectsOfProperty(asset, ADMS.last);
 		if (iter.hasNext())
 		{
 			Resource lastVersion = iter.next().asResource();
-			fGraphStore.getNamedGraph(fURI).remove(asset, ADMS.last, null);
 			fGraphStore.getNamedGraph(fURI).add(asset, ADMS.last, lastVersion);
 		}
 		
