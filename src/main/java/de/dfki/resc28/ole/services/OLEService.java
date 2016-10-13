@@ -5,9 +5,11 @@
  */
 package de.dfki.resc28.ole.services;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -23,8 +25,10 @@ import de.dfki.resc28.flapjack.resources.IContainer;
 import de.dfki.resc28.flapjack.resources.IResource;
 import de.dfki.resc28.flapjack.resources.IResourceManager;
 import de.dfki.resc28.flapjack.services.BaseService;
+import de.dfki.resc28.flapjack.services.PATCH;
 import de.dfki.resc28.igraphstore.Constants;
 import de.dfki.resc28.igraphstore.IGraphStore;
+import de.dfki.resc28.ole.resources.Asset;
 import de.dfki.resc28.ole.resources.Repository;
 import de.dfki.resc28.ole.resources.ResourceManager;
 import de.dfki.resc28.serendipity.client.GenerateAffordances;
@@ -76,6 +80,28 @@ public class OLEService extends BaseService
 			throw new WebApplicationException();
 		}
 
+	}
+	
+	@PATCH
+	@Consumes({ Constants.CT_APPLICATION_JSON_LD, Constants.CT_APPLICATION_NQUADS, Constants.CT_APPLICATION_NTRIPLES, Constants.CT_APPLICATION_RDF_JSON, Constants.CT_APPLICATION_RDFXML, Constants.CT_APPLICATION_TRIX, Constants.CT_APPLICATION_XTURTLE, Constants.CT_TEXT_N3, Constants.CT_TEXT_TRIG, Constants.CT_TEXT_TURTLE })
+	public Response patch( InputStream content, @HeaderParam(HttpHeaders.CONTENT_TYPE) @DefaultValue(Constants.CT_TEXT_TURTLE) final String contentType)
+	{
+		IResource r = getResourceManager().get(getCanonicalURL(fRequestUrl.getRequestUri()));
+		
+		if (r == null)
+		{
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		else if (!(r instanceof Asset))
+		{
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		else if (!(r.getAllowedMethods().contains("PATCH")))
+		{
+			return Response.status(Status.METHOD_NOT_ALLOWED).build();
+		}
+		
+		return ((Asset)r).patchAsset(content, contentType);
 	}
 	
 	

@@ -6,6 +6,7 @@
 package de.dfki.resc28.ole.resources;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +17,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.RDFDataMgr;
 
 import de.dfki.resc28.flapjack.resources.Container;
@@ -49,6 +53,26 @@ public class Asset extends Container implements IContainer
 					   .type(contentType)
 					   .build();
 	}
+	
+	public Response patchAsset(InputStream input, final String contentType)
+	{
+		final Model patchModel = ModelFactory.createDefaultModel();
+		RDFDataMgr.read(patchModel, input, fURI,  RDFDataMgr.determineLang(null, contentType, null) );
+		Resource asset = patchModel.getResource(fURI);
+		
+		// patch ADMS:last triples
+		NodeIterator iter = patchModel.listObjectsOfProperty(asset, ADMS.last);
+		if (iter.hasNext())
+		{
+			Resource lastVersion = iter.next().asResource();
+			fGraphStore.getNamedGraph(fURI).remove(asset, ADMS.last, null);
+			fGraphStore.getNamedGraph(fURI).add(asset, ADMS.last, lastVersion);
+		}
+		
+		// do more patching here...
+		
+		return null;
+	}
 
 	@Override
 	public Set<String> getAllowedMethods() 
@@ -57,6 +81,7 @@ public class Asset extends Container implements IContainer
 		allowedMethods.add(HttpMethod.GET);
 		allowedMethods.add(HttpMethod.HEAD);
 		allowedMethods.add(HttpMethod.OPTIONS);
+		allowedMethods.add("PATCH");
 
 	    return allowedMethods;
 	}
