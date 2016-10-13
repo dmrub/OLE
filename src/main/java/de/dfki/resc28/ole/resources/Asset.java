@@ -56,32 +56,34 @@ public class Asset extends Container implements IContainer
 	
 	public Response patchAsset(InputStream input, final String contentType)
 	{
+		Model assetModel = fGraphStore.getNamedGraph(fURI);
+		Resource asset = assetModel.getResource(fURI);
+		
 		final Model patchModel = ModelFactory.createDefaultModel();
 		RDFDataMgr.read(patchModel, input, fURI,  RDFDataMgr.determineLang(null, contentType, null) );
-		Resource asset = patchModel.getResource(fURI);
+		
 		
 		// patch ADMS:last triples
-		
-		// first remove any old triples
-		System.out.println(fURI);
-		System.out.println(asset.toString());
-		NodeIterator deleteIterator = fGraphStore.getNamedGraph(fURI).listObjectsOfProperty(asset, ADMS.last);
-		if (deleteIterator.hasNext())
+		NodeIterator patchIterator = patchModel.listObjectsOfProperty(asset, ADMS.last);
+		while (patchIterator.hasNext())
 		{
-			Resource lastVersionToRemove = deleteIterator.next().asResource();
-			fGraphStore.getNamedGraph(fURI).remove(asset, ADMS.last, lastVersionToRemove);
+			Resource newVersion = patchIterator.next().asResource();
+			
+			// first remove any old triples
+			NodeIterator deleteIterator = fGraphStore.getNamedGraph(fURI).listObjectsOfProperty(asset, ADMS.last);
+			while (deleteIterator.hasNext())
+			{
+				Resource oldVersion = deleteIterator.next().asResource();
+				assetModel.remove(asset, ADMS.last, oldVersion);
+			}
+			
+			// now, add new version triples
+			assetModel.add(asset, ADMS.last, newVersion);
 		}
 			
-		// next, add the new triple
-		NodeIterator iter = patchModel.listObjectsOfProperty(asset, ADMS.last);
-		if (iter.hasNext())
-		{
-			Resource lastVersion = iter.next().asResource();
-			fGraphStore.getNamedGraph(fURI).add(asset, ADMS.last, lastVersion);
-		}
-		
 		// do more patching here...
-		
+
+		fGraphStore.replaceNamedGraph(fURI, assetModel);
 		return null;
 	}
 
