@@ -272,7 +272,7 @@ cy.on('mouseout', 'node', function(e){
 
     
   $.ajax( {
-    url:      "http://localhost:8081/api/visualize?uri=" + uri,
+    url:      "http://cytoscape-frontend/api/visualize?uri=" + uri,
     dataType: 'json',
     async: true,
     success: function(data) { schwachsinn(data) } });
