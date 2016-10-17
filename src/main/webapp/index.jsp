@@ -29,12 +29,5 @@
     
   <body>
     <div id="cy"></div>
-    
-    <span class="fa fa-bars config-toggle" id="config-toggle"></span>
-    <div id="config" class="config">  
-      <div class="preamble">
-        <span class="label label-info">ARVIDA Asset Viewer</span>
-      </div>
-    </div>
   </body>
 </html>
