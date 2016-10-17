@@ -2,7 +2,7 @@ $(function(){ // on dom ready
     if (window.location.hash.substr(1).length>0)
     var uri = window.location.hash.substr(1);
     else 
-    var uri = "http://ole-frontend/repo";
+    var uri = "http://ole-frontend/repo/assets/987b9507-d138-47b9-a1f4-dfdbe33130ed";
     
   function schwachsinn(data){
         
