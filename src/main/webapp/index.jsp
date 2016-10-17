@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset=utf-8 />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
     
     <title>ARVIDA Asset Viewer</title>
     
@@ -21,8 +21,9 @@
     <script src="http://marvl.infotech.monash.edu/webcola/cola.v3.min.js"></script>
     <script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"></script>
-    <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-cola/1.1.1/cytoscape-cola.js"></script>
     <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-qtip/2.2.5/cytoscape-qtip.js"></script>
+        <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-cose-bilkent/1.3.6/cytoscape-cose-bilkent.js"></script>
+	<script src="cytoscape-expand-collapse.js"></script>
     <script src="code.js"></script>
 
   </head>
@@ -31,7 +32,8 @@
     <div id="cy"></div>
     
     <span class="fa fa-bars config-toggle" id="config-toggle"></span>
-    
+    <b id="collapseAll" style="cursor: pointer;color: darkred">Collapse all</b> / <b id="expandAll" style="cursor: pointer; color: darkslateblue">Expand all</b> <br/>
+	<b id="collapseRecursively" style="cursor: pointer; color: darksalmon">Collapse selected recursively</b> / <b id="expandRecursively" style="cursor: pointer; color: darkmagenta">Expand selected recursively</b>
     <div id="config" class="config">
       
       <div class="preamble">

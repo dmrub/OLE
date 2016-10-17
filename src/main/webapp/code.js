@@ -2,14 +2,12 @@ $(function(){ // on dom ready
     if (window.location.hash.substr(1).length>0)
     var uri = window.location.hash.substr(1);
     else 
-    var uri = "http://ole-frontend/repo/assets/987b9507-d138-47b9-a1f4-dfdbe33130ed";
+    var uri = "http://ole-frontend/repo";
     
   function schwachsinn(data){
         
       var baseUri = window.location.href.split('#')[0];
-
-
-      
+ 
   var cy = cytoscape({
     container: document.getElementById('cy'),
     
@@ -24,7 +22,7 @@ $(function(){ // on dom ready
 
         { "selector":".highlighted",
           "style": {
-              "z-index":"999999"
+              "z-index":"9999"
           }
         },
 
@@ -36,6 +34,7 @@ $(function(){ // on dom ready
 
         { "selector": "node",
           "style": {
+              'width': 'label',
               "font-size":"12px",
               "text-valign":"center",
               "text-halign":"center",
@@ -81,8 +80,7 @@ $(function(){ // on dom ready
  
         { "selector": "node[nodeType=\"uriNode\"]",
           "style": {
-              "width":"label"*2,
-              "height":"label"*2,
+              "background-color":"#911",
               "background-clip":"none",
               "background-fit":"contain",
               "shape": "ellipse",
@@ -92,6 +90,7 @@ $(function(){ // on dom ready
         
         { "selector": "node[nodeType=\"blankNode\"]",
           "style": {
+              'width': 50,
               "background-clip":"none",
               "background-fit":"contain",
               "shape": 'triangle',
@@ -100,20 +99,29 @@ $(function(){ // on dom ready
 
         { "selector": "node[nodeType=\"literalNode\"]",
           "style": {
-              "width":"label",
-              "height":"label",
+              "background-color":"#191",
               "background-clip":"none",
               "background-fit":"contain",
               "shape": "rectangle",
               "content":"data(value)",
           }
         },
+        
+        { "selector": "node[nodeType=\"literalNode\"][valueType=\"xsd:anyURI\"]",
+          "style": {
+              "background-clip":"none",
+              "background-fit":"contain",
+              "shape": "rectangle",
+              "content": "click!",
+          }
+        },
             
         { "selector": "edge",
           "style": {
-              "curve-style":"haystack",
+              label: 'data(name)',
+              'curve-style': 'bezier',
+              'control-point-step-size': 40,
               'target-arrow-shape': 'triangle',
-              "haystack-radius":"0.5",
               "text-valign":"center",
               "text-halign":"center",
               "background-color":"#172",
@@ -121,157 +129,104 @@ $(function(){ // on dom ready
               "line-color":"#a0b3dc",
               "width":"mapData(weight, 0, 1, 1, 8)",
               "overlay-padding":"3px",
-              label: 'data(name)'
+              
               
           },
         },
-        
-        { "selector": "edge.unhighlighted",
+
+        { "selector": "edge.highlighted",
           "style": {
-              "opacity":"0.05"
-          }
-        },
-        
-        { "selector": "edge.filtered",
-          "style": {
-              "opacity":"0"
+              'line-color' : 'black',
+              "width":2,
           }
         },
     ],
       
     elements : data,
+      
+    layout: { 
+        name: 'cose-bilkent',
+        // Called on `layoutready`
+        ready: function () { },
+        // Called on `layoutstop`
+        stop: function () { },
+        // Whether to fit the network view after when done
+        fit: true,
+        // Padding on fit
+        padding: 10,
+        // Whether to enable incremental mode
+        randomize: true,
+        // Node repulsion (non overlapping) multiplier
+        nodeRepulsion: 1000000,
+        // Ideal edge (non nested) length
+        idealEdgeLength: 250,
+        // Divisor to compute edge forces
+        edgeElasticity: 0.45,
+        // Nesting factor (multiplier) to compute ideal edge length for nested edges
+        nestingFactor: 1.0,
+        // Gravity force (constant)
+        gravity: 0.0,
+        // Maximum number of iterations to perform
+        numIter: 50,
+        // For enabling tiling
+        tile: true,
+        // Type of layout animation. The option set is {'during', 'end', false}
+        animate: 'end',
+        // Represents the amount of the vertical space to put between the zero degree members during the tiling operation(can also be a function)
+        tilingPaddingVertical: 5000,
+        // Represents the amount of the horizontal space to put between the zero degree members during the tiling operation(can also be a function)
+        tilingPaddingHorizontal: 5000,
+        // Gravity range (constant) for compounds
+        gravityRangeCompound: 0.0,
+        // Gravity force (constant) for compounds
+        gravityCompound: 0.0,
+        // Gravity range (constant)
+        gravityRange: 0.0
+    }
+
+  });
+
+      /*
+cy.on('mouseover', 'node', function(e){
+    var sel = e.cyTarget;
+    cy.elements().difference(sel.outgoers()).not(sel).addClass('semitransp');
+    sel.connectedEdges().addClass('highlight');
+});
+      
+cy.on('mouseout', 'node', function(e){
+    var sel = e.cyTarget;
+    cy.elements().removeClass('semitransp');
+    sel.connectedEdges().removeClass('highlight');
+});
+*/
+/*      
+  var nodeUnselected = cy.on('mouseout' , function(evt) {
+      var sel = evt.cyTarget;
+      sel.connectedEdges().removeClass('highlighted');
   })
   
-  var params = {
-    name: 'cola',
-    nodeSpacing: 5,
-    edgeLengthVal: 45,
-    animate: true,
-    randomize: false,
-    maxSimulationTime: 1500
-
-
-  };
-
-  var layout = makeLayout();
-  var running = false;
-
-  cy.on('layoutstart', function(){
-    running = true;
-  }).on('layoutstop', function(){
-    running = false;
-  });
+  var nodeSelected = cy.on('mouseover' , function(evt) {
+      var sel = evt.cyTarget;
+      sel.connectedEdges().addClass('highlighted');
+  })
+*/
+  var nodeUnselected = cy.on('unselect' , function(evt) {
+      var sel = evt.cyTarget;
+      sel.connectedEdges().removeClass('highlighted');
+  })
   
-  layout.run();
-
-  var $config = $('#config');
-  var $btnParam = $('<div class="param"></div>');
-  $config.append( $btnParam );
-
-  var sliders = [
-    {
-      label: 'Edge length',
-      param: 'edgeLengthVal',
-      min: 1,
-      max: 200
-    },
-
-    {
-      label: 'Node spacing',
-      param: 'nodeSpacing',
-      min: 1,
-      max: 50
-    }
-  ];
-
-  var buttons = [
-    {
-      label: '<i class="fa fa-random"></i>',
-        fn: function(){ cy.edges().filter('[name = \"ADMS:includedAsset\"]').targets().hide(); cy.edges().filter('[name = \"ADMS:includedAsset\"]').hide();},
-      layoutOpts: {
-        randomize: true,
-        flow: null
-      }
-    },
-
-    {
-      label: '<i class="fa fa-long-arrow-down"></i>',
-        fn: function(){ cy.edges().filter('[name = \"ADMS:includedAsset\"]').targets().hide(); cy.edges().filter('[name = \"ADMS:includedAsset\"]').hide();},
-      layoutOpts: {
-        flow: { axis: 'y', minSeparation: 40 }
-      }
-    },
-      
-    {
-      label: '<i class="fa fa-filter"></i>',
-      fn: function(){ cy.edges().filter('[name = \"ADMS:includedAsset\"]').targets().hide(); cy.edges().filter('[name = \"ADMS:includedAsset\"]').hide();},
-      layoutOpts: {
-        randomize: true,
-        flow: null
-      }
-    }
-    
-  ];
-
-  sliders.forEach( makeSlider );
-
-  buttons.forEach( makeButton );
-
-  function makeLayout( opts ){
-    params.randomize = false;
-    params.edgeLength = function(e){ return params.edgeLengthVal / e.data('weight'); };
-      
-
-    for( var i in opts ){
-      params[i] = opts[i];
-    }
-
-    return cy.makeLayout( params );
-  }
-
-  function makeSlider( opts ){
-    var $input = $('<input></input>');
-    var $param = $('<div class="param"></div>');
-
-    $param.append('<span class="label label-default">'+ opts.label +'</span>');
-    $param.append( $input );
-
-    $config.append( $param );
-
-    var p = $input.slider({
-      min: opts.min,
-      max: opts.max,
-      value: params[ opts.param ]
-    }).on('slide', _.throttle( function(){
-      params[ opts.param ] = p.getValue();
-
-      layout.stop();
-      layout = makeLayout();
-      layout.run();
-    }, 16 ) ).data('slider');
-  }
-
-  function makeButton( opts ){
-    var $button = $('<button class="btn btn-default">'+ opts.label +'</button>');
-    
-    $btnParam.append( $button );
-
-    $button.on('click', function(){
-      layout.stop();
-
-      if( opts.fn ){ opts.fn(); }
-
-      layout = makeLayout( opts.layoutOpts );
-      layout.run();
-    });
-  }
-       
+  var nodeSelected = cy.on('select' , function(evt) {
+      var sel = evt.cyTarget;
+      sel.connectedEdges().addClass('highlighted');
+  })
+  
   cy.nodes().filter('[nodeType=\"uriNode\"]').forEach(
         function(n)
         {
             var g = n.data('name');
             n.qtip( { 
-                content: [ { name: n.data('name'), url: n.data('uri') } ].map(function( link ){ return '<a target="_blank" href="' + baseUri + '#' + link.url + '">Zoom on</a><br /><br /><a target="_blank" href="' + link.url + '">Go to</a>'; }).join('<br />\n'),
+                content: [ { name: n.data('name'), url: n.data('uri') } ].map(function( link ){ 
+                    return '<a target="_blank" href="' + baseUri + '#' + link.url + '">Zoom on</a><br /><br /><a target="_blank" href="' + link.url + '">Go to</a>'; }).join('<br />\n'),
                 position: { my: 'top center', at: 'bottom center' },
                 style: {
                     classes: 'qtip-bootstrap',
@@ -280,17 +235,44 @@ $(function(){ // on dom ready
             });
         }
   );
-    
-  $('#config-toggle').on('click', function(){
-    $('body').toggleClass('config-closed');
+      
+  cy.nodes().filter('[nodeType=\"uriNode\"]').forEach(
+        function(n)
+        {
+            var g = n.data('name');
+            n.qtip( { 
+                content: [ { name: n.data('name'), url: n.data('uri') } ].map(function( link ){ 
+                    return '<a target="_blank" href="' + baseUri + '#' + link.url + '">Zoom on</a><br /><br /><a target="_blank" href="' + link.url + '">Go to</a>'; }).join('<br />\n'),
+                position: { my: 'top center', at: 'bottom center' },
+                style: {
+                    classes: 'qtip-bootstrap',
+                    tip: { width: 16, height: 8 }
+                }
+            });
+        }
+  );
 
-    cy.resize();
-  });
+  cy.nodes().filter('node[nodeType=\"literalNode\"][valueType=\"xsd:anyURI\"]').forEach(
+          function(n)
+        {
+            var g = n.data('name');
+            n.qtip( { 
+                content: [ { name: n.data('name'), url: n.data('value') } ].map(function( link ){ 
+                    return '<a target="_blank" href="' + link.url + '">Follow me!</a>'; }).join('<br />\n'),
+                position: { my: 'top center', at: 'bottom center' },
+                style: {
+                    classes: 'qtip-bootstrap',
+                    tip: { width: 16, height: 8 }
+                }
+            });
+        }
+  );
+
 };
 
     
   $.ajax( {
-    url:      "http://cytoscape-frontend/api/visualize?uri=" + uri,
+    url:      "http://localhost:8081/api/visualize?uri=" + uri,
     dataType: 'json',
     async: true,
     success: function(data) { schwachsinn(data) } });
