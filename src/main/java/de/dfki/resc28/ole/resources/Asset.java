@@ -26,6 +26,7 @@ import de.dfki.resc28.flapjack.resources.Container;
 import de.dfki.resc28.flapjack.resources.IContainer;
 import de.dfki.resc28.flapjack.vocabularies.ADMS;
 import de.dfki.resc28.igraphstore.IGraphStore;
+import javax.ws.rs.core.HttpHeaders;
 
 public class Asset extends Container implements IContainer
 {
@@ -50,6 +51,7 @@ public class Asset extends Container implements IContainer
 		};
 		
 		return Response.ok(out)
+					   .header(HttpHeaders.VARY, HttpHeaders.ACCEPT)
 					   .type(contentType)
 					   .build();
 	}
