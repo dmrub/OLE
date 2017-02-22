@@ -17,7 +17,7 @@ import de.dfki.resc28.igraphstore.IGraphStore;
 import de.dfki.resc28.igraphstore.jena.FusekiGraphStore;
 import de.dfki.resc28.ole.services.OLEService;
 import de.dfki.resc28.serendipity.client.RepresentationEnricher;
-
+import de.dfki.resc28.igraphstore.util.ProxyConfigurator;
 
 @ApplicationPath("/")
 public class Server extends Application
@@ -48,6 +48,7 @@ public class Server extends Application
     {
         try 
         {
+            ProxyConfigurator.initHttpClient();
             String configFile = System.getProperty("ole.configuration");
             java.io.InputStream is;
 
