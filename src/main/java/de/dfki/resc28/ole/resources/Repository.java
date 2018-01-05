@@ -26,9 +26,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -41,17 +39,18 @@ import de.dfki.resc28.flapjack.vocabularies.ADMS;
 import de.dfki.resc28.flapjack.vocabularies.DCAT;
 import de.dfki.resc28.igraphstore.Constants;
 import de.dfki.resc28.igraphstore.IGraphStore;
+import de.dfki.resc28.igraphstore.util.ProxyConfigurator;
 import de.dfki.resc28.ole.Server;
 import de.dfki.resc28.ole.Util;
 import de.dfki.resc28.ole.listeners.AssetListener;
 import de.dfki.resc28.ole.listeners.DistributionListener;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 
-@SuppressWarnings("deprecation")
 public class Repository extends Container implements IResource
 {
 
-	public Repository(String resourceURI, IGraphStore graphStore) 
+	public Repository(String resourceURI, IGraphStore graphStore)
 	{
 		super(resourceURI, graphStore);
 		this.fRDFType = ADMS.AssetRepository;
@@ -77,12 +76,12 @@ public class Repository extends Container implements IResource
 		try
 		{
 			@SuppressWarnings("resource")
-			HttpClient http = new DefaultHttpClient();
+			CloseableHttpClient http = ProxyConfigurator.createHttpClient();
 			HttpGet request = new HttpGet(fileUri);
 
-			request.setHeader("Accept", "text/plain");			// TODO: set accept-header from inputFormat! 
+			request.setHeader("Accept", "text/plain");			// TODO: set accept-header from inputFormat!
 			HttpResponse response = (HttpResponse) http.execute(request);
-			
+
 			if (response.getStatusLine().getStatusCode() == 200)
 			{
 				DataInputStream input = new DataInputStream(new BufferedInputStream(response.getEntity().getContent()));

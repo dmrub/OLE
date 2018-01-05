@@ -1,10 +1,3 @@
-<%--
-    Document   : index
-    Created on : Jan 3, 2018, 10:17:11 PM
-    Author     : rubinste
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,14 +19,15 @@
 </head>
 <body>
 <h2>OLE Service</h2>
-<p><b>Service Base URI:</b><pre>XXX</pre></p>
+<p><b>Service Base URI:</b><pre>{{uriInfo.absolutePath}}</pre></p>
 <table>
     <caption><h3>Available REST API</h3></caption>
     <tr>
         <th>Path</th>
         <th>Description</th>
-    </tr><tr><td>/brick/<b><i>brickID</i></b></td><td>Get brick information</td></tr>
-    <tr><td>/minifig/<b><i>minifigID</i></b></td><td>Get minifig information</td></tr>
+    </tr><tr><td>/repo/assets/<b><i>assetID</i></b></td><td>Asset information</td></tr>
+    <tr><td>/repo/distributions/<b><i>distributionID</i></b></td><td>Distribution information</td></tr>
+    <tr><td>/repo/users/<b><i>userID</i></b></td><td>User information</td></tr>
 </table>
 </body>
 </html>
