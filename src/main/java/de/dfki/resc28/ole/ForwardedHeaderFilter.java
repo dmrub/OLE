@@ -58,12 +58,16 @@ public class ForwardedHeaderFilter implements ContainerRequestFilter {
                 .getHeaderString("x-forwarded-port");
         final String xForwardedHost = requestContext
                 .getHeaderString("x-forwarded-host");
+        final String xForwardedPrefix = requestContext
+                .getHeaderString("x-forwarded-prefix");
 
         System.out.format(
                 "X-Forwarded-Proto: %s, "
-                + "X-Forwarded-Host: %s "
-                + "X-Forwarded-Port: %s%n",
-                xForwardedProto, xForwardedHost, xForwardedPort);
+                + "X-Forwarded-Host: %s, "
+                + "X-Forwarded-Port: %s, "
+                + "X-Forwarded-Prefix: %s%n",
+                xForwardedProto, xForwardedHost,
+                xForwardedPort, xForwardedPrefix);
 
         final UriBuilder reqUriB = requestContext.getUriInfo().getRequestUriBuilder();
         final UriBuilder baseUriB = requestContext.getUriInfo().getBaseUriBuilder();
@@ -91,6 +95,14 @@ public class ForwardedHeaderFilter implements ContainerRequestFilter {
             } catch (NumberFormatException ex) {
                 // ignore
             }
+        }
+
+        if (xForwardedPrefix != null) {
+            final String reqPath = requestContext.getUriInfo().getRequestUri().getPath();
+            reqUriB.replacePath(xForwardedPrefix).path(reqPath);
+            final String basePath = requestContext.getUriInfo().getBaseUri().getPath();
+            baseUriB.replacePath(xForwardedPrefix).path(basePath);
+            uriChanged = true;
         }
 
         if (uriChanged) {
